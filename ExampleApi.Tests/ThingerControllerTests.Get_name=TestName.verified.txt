@@ -1,0 +1,88 @@
+﻿{
+  target: {
+    Version: 1.1,
+    Status: 200 OK,
+    Content: {
+      Headers: {
+        Content-Type: application/json; charset=utf-8
+      },
+      Value: {
+        content: OldContent,
+        name: TestName
+      }
+    },
+    Request: {
+      Uri: {
+        Path: http://localhost/thinger,
+        Query: {
+          name: TestName
+        }
+      }
+    }
+  },
+  mongo: [
+    {
+      Database: TestDatabase,
+      Document: {
+        $db: TestDatabase,
+        aggregate: Thingers,
+        cursor: {},
+        pipeline: [
+          {
+            $match: {
+              Name: TestName
+            }
+          },
+          {
+            $limit: 1
+          }
+        ]
+      },
+      Type: Started,
+      Command: aggregate
+    },
+    {
+      Document: {
+        cursor: {
+          firstBatch: [
+            {
+              Content: OldContent,
+              Name: TestName
+            }
+          ],
+          id: 0,
+          ns: TestDatabase.Thingers
+        },
+        ok: 1.0
+      },
+      Type: Succeeded,
+      Command: aggregate
+    }
+  ],
+  logs: [
+    {
+      Level: Information,
+      Category: ThingerController,
+      Message: Recieved request to find thinger with 'TestName'
+    },
+    {
+      Level: Information,
+      Category: ThingerController,
+      Message: Found thinger with 'TestName'
+    }
+  ],
+  sql: [
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Parameters: {
+        @__name_0 (String?): TestName
+      },
+      Text:
+SELECT "t"."Name", "t"."Content"
+FROM "Thingers" AS "t"
+WHERE "t"."Name" = @__name_0
+LIMIT 1
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+﻿{
+  target: {
+    Version: 1.1,
+    Status: 404 Not Found,
+    Content: {
+      Headers: {
+        Content-Type: application/problem+json; charset=utf-8
+      },
+      Value: {
+        status: 404,
+        title: Not Found,
+        type: https://tools.ietf.org/html/rfc7231#section-6.5.4
+      }
+    },
+    Request: {
+      Uri: {
+        Path: http://localhost/thinger,
+        Query: {
+          name: MissingName
+        }
+      }
+    }
+  },
+  mongo: [
+    {
+      Database: TestDatabase,
+      Document: {
+        $db: TestDatabase,
+        aggregate: Thingers,
+        cursor: {},
+        pipeline: [
+          {
+            $match: {
+              Name: MissingName
+            }
+          },
+          {
+            $limit: 1
+          }
+        ]
+      },
+      Type: Started,
+      Command: aggregate
+    },
+    {
+      Document: {
+        cursor: {
+          firstBatch: [],
+          id: 0,
+          ns: TestDatabase.Thingers
+        },
+        ok: 1.0
+      },
+      Type: Succeeded,
+      Command: aggregate
+    }
+  ],
+  logs: [
+    {
+      Level: Information,
+      Category: ThingerController,
+      Message: Recieved request to find thinger with 'MissingName'
+    },
+    {
+      Level: Information,
+      Category: ThingerController,
+      Message: Did not find thinger with 'MissingName'
+    }
+  ],
+  sql: [
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Parameters: {
+        @__name_0 (String?): MissingName
+      },
+      Text:
+SELECT "t"."Name", "t"."Content"
+FROM "Thingers" AS "t"
+WHERE "t"."Name" = @__name_0
+LIMIT 1
+    }
+  ]
+}
