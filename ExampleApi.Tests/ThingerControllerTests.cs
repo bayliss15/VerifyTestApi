@@ -48,7 +48,7 @@ public class ThingerControllerTests
 
 
         VerifyMongoDb.Enable();
-        ////VerifierSettings.IgnoreMember("_id");
+        VerifierSettings.IgnoreMember("_id"); // Needed in 1.0.79
         VerifierSettings.IgnoreMember("RequestId");
         VerifierSettings.IgnoreMember("OperationId");       
         VerifierSettings.IgnoreMember("ConnectionId"); // Connection details are not very useful
