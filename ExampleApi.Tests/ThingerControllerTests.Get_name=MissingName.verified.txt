@@ -7,9 +7,9 @@
         Content-Type: application/problem+json; charset=utf-8
       },
       Value: {
-        status: 404,
+        type: https://tools.ietf.org/html/rfc7231#section-6.5.4,
         title: Not Found,
-        type: https://tools.ietf.org/html/rfc7231#section-6.5.4
+        status: 404
       }
     },
     Request: {
@@ -25,9 +25,7 @@
     {
       Database: TestDatabase,
       Document: {
-        $db: TestDatabase,
         aggregate: Thingers,
-        cursor: {},
         pipeline: [
           {
             $match: {
@@ -37,7 +35,8 @@
           {
             $limit: 1
           }
-        ]
+        ],
+        $db: TestDatabase
       },
       Type: Started,
       Command: aggregate
@@ -45,7 +44,6 @@
     {
       Document: {
         cursor: {
-          firstBatch: [],
           id: 0,
           ns: TestDatabase.Thingers
         },
@@ -57,14 +55,12 @@
   ],
   logs: [
     {
-      Level: Information,
-      Category: ThingerController,
-      Message: Recieved request to find thinger with 'MissingName'
+      Information: Recieved request to find thinger with 'MissingName',
+      Category: ThingerController
     },
     {
-      Level: Information,
-      Category: ThingerController,
-      Message: Did not find thinger with 'MissingName'
+      Information: Did not find thinger with 'MissingName',
+      Category: ThingerController
     }
   ],
   sql: [

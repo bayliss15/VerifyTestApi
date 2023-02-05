@@ -7,8 +7,8 @@
         Content-Type: application/json; charset=utf-8
       },
       Value: {
-        content: OldContent,
-        name: TestName
+        name: TestName,
+        content: OldContent
       }
     },
     Request: {
@@ -24,9 +24,7 @@
     {
       Database: TestDatabase,
       Document: {
-        $db: TestDatabase,
         aggregate: Thingers,
-        cursor: {},
         pipeline: [
           {
             $match: {
@@ -36,7 +34,8 @@
           {
             $limit: 1
           }
-        ]
+        ],
+        $db: TestDatabase
       },
       Type: Started,
       Command: aggregate
@@ -46,8 +45,8 @@
         cursor: {
           firstBatch: [
             {
-              Content: OldContent,
-              Name: TestName
+              Name: TestName,
+              Content: OldContent
             }
           ],
           id: 0,
@@ -61,14 +60,12 @@
   ],
   logs: [
     {
-      Level: Information,
-      Category: ThingerController,
-      Message: Recieved request to find thinger with 'TestName'
+      Information: Recieved request to find thinger with 'TestName',
+      Category: ThingerController
     },
     {
-      Level: Information,
-      Category: ThingerController,
-      Message: Found thinger with 'TestName'
+      Information: Found thinger with 'TestName',
+      Category: ThingerController
     }
   ],
   sql: [
